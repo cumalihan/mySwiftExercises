@@ -20,7 +20,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView{
             VStack {
-                Text("\(timerManager.secondsLeft)")
+                Text(secondsToMinutesAndSeconds(seconds: timerManager.secondsLeft))
                     .font(.system(size: 80))
                     .padding(.top,80)
                 Image(systemName:  timerManager.timerMode == .running ? "pause.circle.fill" :"play.circle.fill" )
@@ -30,9 +30,11 @@ struct ContentView: View {
                     .frame(width: 180, height: 180)
                     .foregroundColor(.orange)
                     .onTapGesture(perform: {
-                        self.timerManager.timerMode == .running ?
-                        self.timerManager.pause() :
-                        self.timerManager.start()
+                        if self.timerManager.timerMode == .initial{
+                            self.timerManager.setTimerLength(minutes: self.availableMinutes[self.selectedPickerIndex]*60)
+                        }
+                        
+                        self.timerManager.timerMode == .running ? self.timerManager.pause() : self.timerManager.start()
                     })
                 
                 if timerManager.timerMode == .paused {

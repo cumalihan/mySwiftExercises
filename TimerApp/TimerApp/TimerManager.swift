@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 
 class TimerManager: ObservableObject{
-     @Published var secondsLeft = 60
+    @Published var secondsLeft = UserDefaults.standard.integer(forKey: "timerLength")
      @Published var timerMode: TimerMode = .initial
  
     var timer = Timer()
@@ -30,15 +30,20 @@ class TimerManager: ObservableObject{
     }
     func reset(){
         self.timerMode = .initial
-        self.secondsLeft = 60
+        self.secondsLeft = UserDefaults.standard.integer(forKey: "timerLength")
         timer.invalidate()
         
-        if self.secondsLeft == 0{
-               self.reset()
-           }
+       
     }
     func pause(){
         self.timerMode = .paused
+        timer.invalidate()
+    }
+    
+    func setTimerLength(minutes: Int){
+        let defaults = UserDefaults.standard
+        defaults.set(minutes, forKey: "timerLength")
+        secondsLeft = minutes
     }
     
    
